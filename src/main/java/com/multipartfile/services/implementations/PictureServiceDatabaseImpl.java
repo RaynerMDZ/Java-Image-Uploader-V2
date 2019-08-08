@@ -3,22 +3,29 @@ package com.multipartfile.services.implementations;
 import com.multipartfile.entity.Picture;
 import com.multipartfile.repositories.PictureRepository;
 import com.multipartfile.services.PictureService;
-import com.multipartfile.util.AzureConnection;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * @author Rayner MDZ
  */
 @Service
+@Primary
 public class PictureServiceDatabaseImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
   private PictureRepository repository;
+
+  private final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 
 
@@ -52,7 +59,48 @@ public class PictureServiceDatabaseImpl implements PictureService {
    * @return
    */
   @Override
+  @Transactional
   public Optional<Picture> saveOrUpdatePicture(Picture picture, MultipartFile file) {
+
+    Picture foundPicture;
+    String encoded;
+
+    // Updates
+    try {
+
+      if (picture.getId() != null) {
+        if (getPictureById(picture.getId()).isPresent()) {
+
+          encoded = Base64.encodeBase64String(file.getBytes());
+
+          picture.setBlob(file.getBytes());
+          picture.setPictureString(encoded);
+          return Optional.of(repository.save(picture));
+
+        }
+      }
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    // Creates
+
+    try {
+
+      encoded = Base64.encodeBase64String(file.getBytes());
+
+      foundPicture = new Picture();
+      foundPicture.setName(picture.getName());
+      foundPicture.setBlob(file.getBytes());
+      foundPicture.setPictureString(encoded);
+
+      return Optional.of(repository.save(foundPicture));
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     return Optional.empty();
   }
 

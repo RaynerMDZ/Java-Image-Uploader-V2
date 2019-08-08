@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * @author Rayner MDZ
@@ -22,7 +23,11 @@ public class PictureServiceImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
   private PictureRepository repository;
+
+  @Qualifier(value = "Util")
   private Util util;
+
+  private final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
   public PictureServiceImpl(PictureRepository repository, Util util) {
     this.repository = repository;

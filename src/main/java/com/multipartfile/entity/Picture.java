@@ -28,5 +28,10 @@ public class Picture {
   private String url;
 
   @Lob
-  private Byte[] blob;
+  @Column(name = "blob")
+  private byte[] blob;
+
+  @Lob
+  @Column(name = "picture_string")
+  private String pictureString;
 }

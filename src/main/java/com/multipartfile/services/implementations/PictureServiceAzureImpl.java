@@ -27,7 +27,6 @@ import java.util.logging.Logger;
  * @author Rayner MDZ
  */
 @Service
-@Primary
 public class PictureServiceAzureImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
