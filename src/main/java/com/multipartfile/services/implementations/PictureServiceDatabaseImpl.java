@@ -3,6 +3,7 @@ package com.multipartfile.services.implementations;
 import com.multipartfile.entity.Picture;
 import com.multipartfile.repositories.PictureRepository;
 import com.multipartfile.services.PictureService;
+import com.multipartfile.util.AzureConnection;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,12 @@ public class PictureServiceDatabaseImpl implements PictureService {
   @Qualifier(value = "PictureRepository")
   private PictureRepository repository;
 
-  public PictureServiceDatabaseImpl(PictureRepository repository) {
+  @Qualifier(value = "AzureConnection")
+  private AzureConnection azureConnection;
+
+  public PictureServiceDatabaseImpl(PictureRepository repository, AzureConnection azureConnection) {
     this.repository = repository;
+    this.azureConnection = azureConnection;
   }
 
   /**
