@@ -18,7 +18,6 @@ import java.util.Optional;
  * @author Rayner MDZ
  */
 @Service
-@Primary
 public class PictureServiceImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")

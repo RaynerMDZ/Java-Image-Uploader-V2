@@ -28,7 +28,6 @@ public class PictureController {
 
   @PostMapping("/save-picture")
   public String savePicture(@ModelAttribute("picture") Picture picture, @RequestParam("file") MultipartFile file) {
-    picture.setPath("");
     service.saveOrUpdatePicture(picture, file);
     return "redirect:/";
   }

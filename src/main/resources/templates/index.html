@@ -25,7 +25,10 @@
                         <div class="card-body text-center">
                             <h5 class="card-title" th:text="${picture.getName()}">Card title</h5>
                         </div>
-                        <a href="" th:href="@{${'/picture/' + picture.getId() + '/update-picture'}}"><img class="img-fluid" th:src="'images/' + ${picture.getPath()}" src="" alt="Card image cap"></a>
+                            <!--Server Uploaded-->
+<!--                        <a href="" th:href="@{${'/picture/' + picture.getId() + '/update-picture'}}"><img class="img-fluid" th:src="'images/' + ${picture.getPath()}" src="" alt="Card image cap"></a>-->
+                        <!--Azure Uploaded-->
+                        <a href="" th:href="@{${'/picture/' + picture.getId() + '/update-picture'}}"><img class="img-fluid" th:src="${picture.getUrl()}" src="" alt="Card image cap"></a>
                     </div>
                 </div>
 
