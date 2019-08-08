@@ -20,12 +20,10 @@ public class PictureServiceDatabaseImpl implements PictureService {
   @Qualifier(value = "PictureRepository")
   private PictureRepository repository;
 
-  @Qualifier(value = "AzureConnection")
-  private AzureConnection azureConnection;
 
-  public PictureServiceDatabaseImpl(PictureRepository repository, AzureConnection azureConnection) {
+
+  public PictureServiceDatabaseImpl(PictureRepository repository) {
     this.repository = repository;
-    this.azureConnection = azureConnection;
   }
 
   /**
@@ -44,7 +42,7 @@ public class PictureServiceDatabaseImpl implements PictureService {
    */
   @Override
   public Optional<Picture> getPictureById(Integer id) {
-    return Optional.empty();
+    return this.repository.findById(id);
   }
 
   /**

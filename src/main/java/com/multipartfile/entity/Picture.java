@@ -23,4 +23,10 @@ public class Picture {
 
   @Column(name = "picture_path")
   private String path;
+
+  @Column(name = "url")
+  private String url;
+
+  @Lob
+  private Byte[] blob;
 }
