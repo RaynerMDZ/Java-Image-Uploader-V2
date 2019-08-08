@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Picture Form</title>
+
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link th:href="@{/webjars/font-awesome/5.7.2/css/all.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+
+    <section>
+        <div class="container">
+            <div class="p-5">
+                <div class="d-flex justify-content-center">
+
+                    <form class="col-12 p-5 m-5 text-center" role="form" th:object="${picture}" th:action="@{/picture/save-picture}" method="post"
+                          enctype="multipart/form-data">
+
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <div class="form-group shadow-sm">
+                            <label>Name</label>
+                            <input type="text" class="form-control" th:field="*{name}" th:placeholder="${picture.getName()}">
+                        </div>
+
+                        <div class="form-group shadow-sm">
+                            <label for="">Select image</label>
+                            <input type="file" class="form-control" name="file" accept="image/*">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Save image" class="btn btn-dark text-white">
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="text-center mt-5 mb-3">
+            <h4><a href="" class="text-dark" th:href="@{/}">Go Back</a></h4>
+        </div>
+    </section>
+
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+    <script crossorigin="anonymous" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+</body>
+</html>

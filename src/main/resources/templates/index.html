@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pictures</title>
+
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link th:href="@{/webjars/font-awesome/5.7.2/css/all.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+
+    <section>
+        <div class="text-center mt-5 mb-3">
+            <h1 class="text-dark">Pictures</h1>
+            <hr class="text-secondary">
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-4 d-flex justify-content-around mt-2 mb-2" th:each="picture : ${pictures}">
+                    <div class="card border-0">
+                        <div class="card-body text-center">
+                            <h5 class="card-title" th:text="${picture.getName()}">Card title</h5>
+                        </div>
+                        <a href="" th:href="@{${'/picture/' + picture.getId() + '/update-picture'}}"><img class="img-fluid" th:src="'images/' + ${picture.getPath()}" src="" alt="Card image cap"></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="text-center mt-5 mb-3">
+            <h4><a href="" class="text-dark" th:href="@{/picture/form}">Add Picture</a></h4>
+        </div>
+    </section>
+
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+    <script crossorigin="anonymous" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+</body>
+</html>
