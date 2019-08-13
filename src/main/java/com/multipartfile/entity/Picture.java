@@ -1,5 +1,6 @@
 package com.multipartfile.entity;
 
+import com.multipartfile.enums.UploadMethods;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -34,4 +35,8 @@ public class Picture {
   @Lob
   @Column(name = "picture_string")
   private String pictureString;
+
+  @Enumerated(value = EnumType.STRING)
+  @Column(name = "upload_method")
+  private UploadMethods uploadMethods;
 }

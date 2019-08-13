@@ -6,7 +6,6 @@ import com.multipartfile.services.PictureService;
 import com.multipartfile.util.Util;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,19 +18,26 @@ import java.util.logging.Logger;
  * @author Rayner MDZ
  */
 @Service
-public class PictureServiceImpl implements PictureService {
+//@Profile("server")
+public class PictureServiceServerImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
-  private PictureRepository repository;
+  private final PictureRepository repository;
 
   @Qualifier(value = "Util")
-  private Util util;
+  private final Util util;
 
   private final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-  public PictureServiceImpl(PictureRepository repository, Util util) {
+  public PictureServiceServerImpl(PictureRepository repository, Util util) {
+    log.info("Server service loaded!");
     this.repository = repository;
     this.util = util;
+  }
+
+  @Override
+  public String getType() {
+    return "server";
   }
 
   /**
@@ -40,16 +46,18 @@ public class PictureServiceImpl implements PictureService {
    */
   @Override
   public Iterable<Picture> getAllPictures() {
+    log.info("Getting all pictures!");
     return this.repository.findAll();
   }
 
   /**
-   *
+   * Gets a picture by its id from the database.
    * @param id
-   * @return
+   * @return a picture object.
    */
   @Override
   public Optional<Picture> getPictureById(Integer id) {
+    log.info("Getting picture with the id of " + id);
     return this.repository.findById(id);
   }
 
@@ -73,6 +81,8 @@ public class PictureServiceImpl implements PictureService {
         // update
         if (foundPicture.isPresent()) {
 
+          log.info("Updating the picture with the id of " + foundPicture.get().getId());
+
           if (file != null) {
 
             if (deletePictureFromServer(util.getFILE_BASE_PATH() + foundPicture.get().getPath())) {
@@ -80,10 +90,12 @@ public class PictureServiceImpl implements PictureService {
               createdFile = new File(util.getFILE_BASE_PATH() + file.getOriginalFilename());
               createdFile.createNewFile();
 
+              log.info("File created!");
+
               file.transferTo(createdFile.getAbsoluteFile());
               foundPicture.get().setPath(file.getOriginalFilename());
 
-              System.out.println("\nUPDATE\n");
+              log.info("Update done!");
 
               return Optional.of(repository.save(foundPicture.get()));
             }
@@ -93,6 +105,9 @@ public class PictureServiceImpl implements PictureService {
 
       // create
       if (file != null) {
+
+        log.info("Saving new picture!");
+
         createdFile = new File(util.getFILE_BASE_PATH() + file.getOriginalFilename());
         createdFile.createNewFile();
 
@@ -100,7 +115,7 @@ public class PictureServiceImpl implements PictureService {
         picture.setPath(file.getOriginalFilename());
       }
 
-      System.out.println("\nCREATE\n");
+      log.info("Picture created!");
 
       return Optional.of(repository.save(picture));
 
@@ -117,9 +132,29 @@ public class PictureServiceImpl implements PictureService {
    */
   @Override
   public boolean deletePictureById(Integer id) {
+
+    log.info("Deleting picture from server!");
+
+    boolean success = false;
+    Optional<Picture> picture;
+
     try {
-      this.repository.deleteById(id);
-      return true;
+
+      picture = this.getPictureById(id);
+
+      if (picture.isPresent()) {
+        log.info("Picture is present.");
+        success = deletePictureFromServer(util.getFILE_BASE_PATH() + picture.get().getPath());
+        log.info("Picture deleted from server!");
+      }
+
+      if (success) {
+        this.repository.deleteById(id);
+        log.info("Picture deleted from server!");
+        return true;
+      }
+      return false;
+
     } catch (HibernateException e) {
       e.printStackTrace();
       return false;
@@ -127,9 +162,9 @@ public class PictureServiceImpl implements PictureService {
   }
 
   /**
-   *
-   * @param path
-   * @return
+   * Deletes a picture from the server.
+   * @param path as the path of the file
+   * @return a boolean
    */
   private boolean deletePictureFromServer(String path) {
     File foundFile;

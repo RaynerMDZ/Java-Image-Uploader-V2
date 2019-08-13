@@ -11,7 +11,6 @@ import com.multipartfile.util.AzureConnection;
 import com.multipartfile.util.Util;
 import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,23 +26,30 @@ import java.util.logging.Logger;
  * @author Rayner MDZ
  */
 @Service
+//@Profile("azure")
 public class PictureServiceAzureImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
-  private PictureRepository repository;
+  private final PictureRepository repository;
 
   @Qualifier(value = "AzureConnection")
-  private AzureConnection azureConnection;
+  private final AzureConnection azureConnection;
 
   @Qualifier(value = "Util")
-  private Util util;
+  private final Util util;
 
   private final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
   public PictureServiceAzureImpl(PictureRepository repository, AzureConnection azureConnection, Util util) {
+    log.info("Azure service loaded!");
     this.repository = repository;
     this.azureConnection = azureConnection;
     this.util = util;
+  }
+
+  @Override
+  public String getType() {
+    return "azure";
   }
 
   /**
@@ -341,6 +347,7 @@ public class PictureServiceAzureImpl implements PictureService {
         foundPicture = getPictureById(picture.getId()).get();
         foundPicture.setUrl(URI);
         foundPicture.setName(picture.getName());
+        foundPicture.setUploadMethods(picture.getUploadMethods());
 
         try {
           return Optional.of(repository.save(foundPicture));
@@ -357,6 +364,7 @@ public class PictureServiceAzureImpl implements PictureService {
       foundPicture = new Picture();
       foundPicture.setName(picture.getName());
       foundPicture.setUrl(URI);
+      foundPicture.setUploadMethods(picture.getUploadMethods());
 
       repository.save(foundPicture);
       return Optional.of(repository.save(foundPicture));

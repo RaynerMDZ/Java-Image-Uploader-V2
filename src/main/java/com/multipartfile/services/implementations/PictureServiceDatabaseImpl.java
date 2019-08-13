@@ -6,7 +6,6 @@ import com.multipartfile.services.PictureService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,18 +18,22 @@ import java.util.logging.Logger;
  * @author Rayner MDZ
  */
 @Service
-@Primary
+//@Profile("database")
 public class PictureServiceDatabaseImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
-  private PictureRepository repository;
+  private final PictureRepository repository;
 
   private final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-
-
   public PictureServiceDatabaseImpl(PictureRepository repository) {
+    log.info("Database service loaded!");
     this.repository = repository;
+  }
+
+  @Override
+  public String getType() {
+    return "database";
   }
 
   /**
@@ -94,6 +97,7 @@ public class PictureServiceDatabaseImpl implements PictureService {
       foundPicture.setName(picture.getName());
       foundPicture.setBlob(file.getBytes());
       foundPicture.setPictureString(encoded);
+      foundPicture.setUploadMethods(picture.getUploadMethods());
 
       return Optional.of(repository.save(foundPicture));
 

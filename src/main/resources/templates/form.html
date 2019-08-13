@@ -30,6 +30,13 @@
                             <label for="">Select image</label>
                             <input type="file" class="form-control" name="file" accept="image/*">
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="uploadMethods">Select Upload Method:</label>
+                            <select class="form-control" th:field="*{{uploadMethods}}">
+                                <option th:each="method : ${methods}" th:text="${{method}}" th:value="${{method}}"></option>
+                            </select>
+                        </div>
 
                         <div class="form-group">
                             <input type="submit" value="Save image" class="btn btn-dark text-white">

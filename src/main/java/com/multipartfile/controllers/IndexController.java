@@ -1,7 +1,6 @@
 package com.multipartfile.controllers;
 
-import com.multipartfile.entity.Picture;
-import com.multipartfile.services.PictureService;
+import com.multipartfile.services.implementations.PictureFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,15 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
 
-  private PictureService service;
+  private PictureFactory factory;
 
-  public IndexController(PictureService service) {
-    this.service = service;
+  public IndexController(PictureFactory factory) {
+    this.factory = factory;
   }
 
   @GetMapping("/")
   public String home(Model model) {
-    model.addAttribute("pictures", service.getAllPictures());
+    model.addAttribute("pictures", factory.getService("server").getAllPictures());
     return "index";
   }
 }

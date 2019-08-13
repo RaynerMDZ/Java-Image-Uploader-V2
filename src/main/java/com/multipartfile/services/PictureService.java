@@ -10,6 +10,7 @@ import java.util.Optional;
  */
 public interface PictureService {
 
+  String getType();
   Iterable<Picture> getAllPictures();
   Optional<Picture> getPictureById(Integer id);
   Optional<Picture> saveOrUpdatePicture(Picture picture, MultipartFile file);
