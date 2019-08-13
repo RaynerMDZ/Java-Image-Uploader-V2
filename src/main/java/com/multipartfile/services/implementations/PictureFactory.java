@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Rayner MDZ
@@ -17,7 +17,7 @@ public class PictureFactory {
   private static final Map<String, PictureService> pictureServiceCache = new HashMap<>();
 
   @Autowired
-  public PictureFactory(List<PictureService> services) {
+  public PictureFactory(Set<PictureService> services) {
     for (PictureService service : services) {
       pictureServiceCache.put(service.getType(), service);
     }
