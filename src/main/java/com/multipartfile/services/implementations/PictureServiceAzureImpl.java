@@ -122,7 +122,7 @@ public class PictureServiceAzureImpl implements PictureService {
 
     } catch (URISyntaxException | IOException | IllegalArgumentException e) {
       e.printStackTrace();
-      log.info("Deleting file with the name: " + convertedFile.getName() + " because there was a exception");
+      log.info("Deleting file with the name: " + convertedFile.getName() + " because there was an exception.");
       convertedFile.delete();
       return Optional.empty();
 
@@ -159,7 +159,7 @@ public class PictureServiceAzureImpl implements PictureService {
 
     } catch (URISyntaxException | IOException | IllegalArgumentException e) {
       e.printStackTrace();
-      log.info("Deleting file with the name: " + convertedFile.getName() + " because there was a exception");
+      log.info("Deleting file with the name: " + convertedFile.getName() + " because there was an exception.");
       convertedFile.delete();
       return Optional.empty();
 

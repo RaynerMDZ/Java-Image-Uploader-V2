@@ -5,5 +5,5 @@ package com.multipartfile.enums;
  */
 public enum UploadMethods {
 
-  SERVER, AZURE, DATABASE, NONE;
+  SERVER, AZURE, DATABASE;
 }
