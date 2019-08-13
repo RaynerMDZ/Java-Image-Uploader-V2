@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -18,7 +19,6 @@ import java.util.logging.Logger;
  * @author Rayner MDZ
  */
 @Service
-//@Profile("server")
 public class PictureServiceServerImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
@@ -37,6 +37,7 @@ public class PictureServiceServerImpl implements PictureService {
 
   @Override
   public String getType() {
+    log.info("Entering server implementation.");
     return "server";
   }
 
@@ -68,6 +69,7 @@ public class PictureServiceServerImpl implements PictureService {
    * @return
    */
   @Override
+  @Transactional
   public Optional<Picture> saveOrUpdatePicture(Picture picture, MultipartFile file) {
 
     File createdFile;
@@ -131,6 +133,7 @@ public class PictureServiceServerImpl implements PictureService {
    * @return
    */
   @Override
+  @Transactional
   public boolean deletePictureById(Integer id) {
 
     log.info("Deleting picture from server!");

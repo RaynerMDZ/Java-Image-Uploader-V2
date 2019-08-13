@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  * @author Rayner MDZ
  */
 @Service
-//@Profile("database")
 public class PictureServiceDatabaseImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
@@ -33,6 +32,7 @@ public class PictureServiceDatabaseImpl implements PictureService {
 
   @Override
   public String getType() {
+    log.info("Entering database implementation.");
     return "database";
   }
 
@@ -114,6 +114,7 @@ public class PictureServiceDatabaseImpl implements PictureService {
    * @return
    */
   @Override
+  @Transactional
   public boolean deletePictureById(Integer id) {
     try {
       this.repository.deleteById(id);

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,7 +27,6 @@ import java.util.logging.Logger;
  * @author Rayner MDZ
  */
 @Service
-//@Profile("azure")
 public class PictureServiceAzureImpl implements PictureService {
 
   @Qualifier(value = "PictureRepository")
@@ -49,6 +49,7 @@ public class PictureServiceAzureImpl implements PictureService {
 
   @Override
   public String getType() {
+    log.info("Entering azure implementation.");
     return "azure";
   }
 
@@ -78,6 +79,7 @@ public class PictureServiceAzureImpl implements PictureService {
    * @return
    */
   @Override
+  @Transactional
   public Optional<Picture> saveOrUpdatePicture(Picture picture, MultipartFile file) {
 
     CloudBlobContainer container;
@@ -118,8 +120,9 @@ public class PictureServiceAzureImpl implements PictureService {
         }
       }
 
-    } catch (URISyntaxException | IOException e) {
+    } catch (URISyntaxException | IOException | IllegalArgumentException e) {
       e.printStackTrace();
+      log.info("Deleting file with the name: " + convertedFile.getName() + " because there was a exception");
       convertedFile.delete();
       return Optional.empty();
 
@@ -154,8 +157,9 @@ public class PictureServiceAzureImpl implements PictureService {
 
       return saveImageWithUri(picture, URI);
 
-    } catch (URISyntaxException | IOException e) {
+    } catch (URISyntaxException | IOException | IllegalArgumentException e) {
       e.printStackTrace();
+      log.info("Deleting file with the name: " + convertedFile.getName() + " because there was a exception");
       convertedFile.delete();
       return Optional.empty();
 
@@ -172,6 +176,7 @@ public class PictureServiceAzureImpl implements PictureService {
    * @return
    */
   @Override
+  @Transactional
   public boolean deletePictureById(Integer id) {
 
     Optional<Picture> picture = getPictureById(id);
@@ -207,7 +212,7 @@ public class PictureServiceAzureImpl implements PictureService {
 
         return true;
 
-      } catch (URISyntaxException e) {
+      } catch (URISyntaxException | IllegalArgumentException e) {
         e.printStackTrace();
 
       } catch (StorageException ex) {
@@ -259,7 +264,7 @@ public class PictureServiceAzureImpl implements PictureService {
    * @param azureStorageConnectionString
    * @return
    */
-  private CloudBlobContainer azureContainerConnection(String azureContainerName, String azureStorageConnectionString)  {
+  private CloudBlobContainer azureContainerConnection(String azureContainerName, String azureStorageConnectionString) {
 
     CloudStorageAccount storageAccount;
     CloudBlobClient blobClient;
