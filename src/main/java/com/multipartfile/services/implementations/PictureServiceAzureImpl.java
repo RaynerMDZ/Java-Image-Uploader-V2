@@ -55,20 +55,22 @@ public class PictureServiceAzureImpl implements PictureService {
 
   /**
    *
-   * @return
+   * @return Iterable<Picture>
    */
   @Override
   public Iterable<Picture> getAllPictures() {
+    log.info("Getting all pictures from Azure.");
     return this.repository.findAll();
   }
 
   /**
    *
    * @param id
-   * @return
+   * @return Optional<Picture>
    */
   @Override
   public Optional<Picture> getPictureById(Integer id) {
+    log.info("Getting picture with the id of " + id + " from the Azure.");
     return this.repository.findById(id);
   }
 
@@ -76,7 +78,7 @@ public class PictureServiceAzureImpl implements PictureService {
    *
    * @param picture
    * @param file
-   * @return
+   * @return Optional<Picture>
    */
   @Override
   @Transactional
@@ -90,9 +92,9 @@ public class PictureServiceAzureImpl implements PictureService {
     try {
       if (picture.getId() != null) {
 
-        log.info("Updating file");
-
         if (this.getPictureById(picture.getId()).isPresent()) {
+
+          log.info("Updating the picture from Azure with the id of " + picture.getId());
 
           Picture foundPicture = this.getPictureById(picture.getId()).get();
 
@@ -135,7 +137,7 @@ public class PictureServiceAzureImpl implements PictureService {
     //Creates
     try {
 
-      log.info("Creating file");
+      log.info("Creating picture in Azure");
 
       convertedFile = multipartToFile(util.getFILE_BASE_PATH(), file);
 
@@ -153,7 +155,7 @@ public class PictureServiceAzureImpl implements PictureService {
 
       convertedFile.delete();
 
-      log.info("Creating file done!");
+      log.info("Creating picture done!");
 
       return saveImageWithUri(picture, URI);
 
@@ -179,6 +181,8 @@ public class PictureServiceAzureImpl implements PictureService {
   @Transactional
   public boolean deletePictureById(Integer id) {
 
+    log.info("Deleting picture from Azure!");
+
     Optional<Picture> picture = getPictureById(id);
     CloudBlobContainer container;
 
@@ -202,20 +206,23 @@ public class PictureServiceAzureImpl implements PictureService {
         if (blob.exists()) {
 
           blob.delete();
-          System.out.println("Blob with name: " + name[name.length-1] + " Deleted!");
+          log.info("Blob with name: " + name[name.length-1] + " Deleted!");
 
         } else {
-          System.out.println("Blob with name " + name[name.length -1] + " does not exist");
+          log.info("Blob with name " + name[name.length -1] + " does not exist");
         }
 
         repository.delete(picture.get());
+        log.info("Picture data deleted from database!");
 
         return true;
 
       } catch (URISyntaxException | IllegalArgumentException e) {
+        log.info("An error occurred while deleting the picture with the id: " + id + " from Azure.");
         e.printStackTrace();
 
       } catch (StorageException ex) {
+        log.info("An error occurred while deleting the picture with the id: " + id + " from Azure.");
         System.out.println(String.format("Service error. Http code: %d and error code: %s", ex.getHttpStatusCode(), ex.getErrorCode()));
       }
       return false;

@@ -47,7 +47,7 @@ public class PictureServiceServerImpl implements PictureService {
    */
   @Override
   public Iterable<Picture> getAllPictures() {
-    log.info("Getting all pictures!");
+    log.info("Getting all pictures.");
     return this.repository.findAll();
   }
 
@@ -58,7 +58,7 @@ public class PictureServiceServerImpl implements PictureService {
    */
   @Override
   public Optional<Picture> getPictureById(Integer id) {
-    log.info("Getting picture with the id of " + id);
+    log.info("Getting picture with the id of " + id + " from the server.");
     return this.repository.findById(id);
   }
 
@@ -83,7 +83,7 @@ public class PictureServiceServerImpl implements PictureService {
         // update
         if (foundPicture.isPresent()) {
 
-          log.info("Updating the picture with the id of " + foundPicture.get().getId());
+          log.info("Updating the picture from the server with the id of " + foundPicture.get().getId());
 
           if (file != null) {
 
@@ -108,7 +108,7 @@ public class PictureServiceServerImpl implements PictureService {
       // create
       if (file != null) {
 
-        log.info("Saving new picture!");
+        log.info("Saving new picture to the server");
 
         createdFile = new File(util.getFILE_BASE_PATH() + file.getOriginalFilename());
         createdFile.createNewFile();
@@ -117,11 +117,12 @@ public class PictureServiceServerImpl implements PictureService {
         picture.setPath(file.getOriginalFilename());
       }
 
-      log.info("Picture created!");
+      log.info("Picture created in the server");
 
       return Optional.of(repository.save(picture));
 
     } catch (IOException e) {
+      log.info("An error occurred while updating or creating a picture from the server with the id: " + picture.getId());
       e.printStackTrace();
       return Optional.empty();
     }
@@ -153,12 +154,14 @@ public class PictureServiceServerImpl implements PictureService {
 
       if (success) {
         this.repository.deleteById(id);
-        log.info("Picture deleted from server!");
+        log.info("Picture data deleted from database!");
         return true;
       }
       return false;
 
     } catch (HibernateException e) {
+
+      log.info("An error occurred while deleting the picture with the id: " + id + " from the server.");
       e.printStackTrace();
       return false;
     }

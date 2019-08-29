@@ -2,7 +2,7 @@ package com.multipartfile.services.implementations;
 
 import com.multipartfile.services.PictureService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * @author Rayner MDZ
  */
-@Service
+@Component
 public class PictureFactory {
 
   private static final Map<String, PictureService> pictureServiceCache = new HashMap<>();

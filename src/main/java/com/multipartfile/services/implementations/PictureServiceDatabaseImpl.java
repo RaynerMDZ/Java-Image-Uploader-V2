@@ -42,6 +42,7 @@ public class PictureServiceDatabaseImpl implements PictureService {
    */
   @Override
   public Iterable<Picture> getAllPictures() {
+    log.info("Returning all pictures from the database.");
     return this.repository.findAll();
   }
 
@@ -52,6 +53,7 @@ public class PictureServiceDatabaseImpl implements PictureService {
    */
   @Override
   public Optional<Picture> getPictureById(Integer id) {
+    log.info("Returning picture with the id: " + id + " from the database.");
     return this.repository.findById(id);
   }
 
@@ -59,7 +61,7 @@ public class PictureServiceDatabaseImpl implements PictureService {
    *
    * @param picture
    * @param file
-   * @return
+   * @return Optional<Picture>
    */
   @Override
   @Transactional
@@ -74,22 +76,30 @@ public class PictureServiceDatabaseImpl implements PictureService {
       if (picture.getId() != null) {
         if (getPictureById(picture.getId()).isPresent()) {
 
+          log.info("Updating database picture with the id: " + picture.getId());
+
           encoded = Base64.encodeBase64String(file.getBytes());
 
           picture.setBlob(file.getBytes());
           picture.setPictureString(encoded);
+
+          log.info("Picture updated to the database.");
+
           return Optional.of(repository.save(picture));
 
         }
       }
 
     } catch (IOException e) {
+      log.info("An error occurred while updating a picture from the database with the id: " + picture.getId());
       e.printStackTrace();
     }
 
     // Creates
 
     try {
+
+      log.info("Creating new picture in the database.");
 
       encoded = Base64.encodeBase64String(file.getBytes());
 
@@ -99,9 +109,12 @@ public class PictureServiceDatabaseImpl implements PictureService {
       foundPicture.setPictureString(encoded);
       foundPicture.setUploadMethods(picture.getUploadMethods());
 
+      log.info("Picture created in the database.");
+
       return Optional.of(repository.save(foundPicture));
 
     } catch (IOException e) {
+      log.info("An error occurred while creating the picture in the database.");
       e.printStackTrace();
     }
 
@@ -111,15 +124,25 @@ public class PictureServiceDatabaseImpl implements PictureService {
   /**
    *
    * @param id
-   * @return
+   * @return boolean
    */
   @Override
   @Transactional
   public boolean deletePictureById(Integer id) {
+
+    log.info("Deleting picture from database.");
+
     try {
+
       this.repository.deleteById(id);
+
+      log.info("Picture with id: " + id + " has been deleted from the database.");
+
       return true;
     } catch (HibernateException e) {
+
+      log.info("An error occurred while deleting the picture with the id: " + id + " from the database.");
+
       e.printStackTrace();
       return false;
     }
