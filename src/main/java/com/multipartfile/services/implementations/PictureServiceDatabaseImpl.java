@@ -25,7 +25,7 @@ public class PictureServiceDatabaseImpl implements PictureService {
 
   private final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-  public PictureServiceDatabaseImpl(PictureRepository repository) {
+  public PictureServiceDatabaseImpl(@Qualifier(value = "PictureRepository") PictureRepository repository) {
     log.info("Database service loaded!");
     this.repository = repository;
   }

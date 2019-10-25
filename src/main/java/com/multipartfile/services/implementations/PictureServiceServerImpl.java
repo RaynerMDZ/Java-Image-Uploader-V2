@@ -29,7 +29,7 @@ public class PictureServiceServerImpl implements PictureService {
 
   private final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-  public PictureServiceServerImpl(PictureRepository repository, Util util) {
+  public PictureServiceServerImpl(@Qualifier(value = "PictureRepository") PictureRepository repository, Util util) {
     log.info("Server service loaded!");
     this.repository = repository;
     this.util = util;

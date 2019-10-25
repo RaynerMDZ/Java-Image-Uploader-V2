@@ -40,7 +40,7 @@ public class PictureServiceAzureImpl implements PictureService {
 
   private final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-  public PictureServiceAzureImpl(PictureRepository repository, AzureConnection azureConnection, Util util) {
+  public PictureServiceAzureImpl(@Qualifier(value = "PictureRepository") PictureRepository repository, AzureConnection azureConnection, Util util) {
     log.info("Azure service loaded!");
     this.repository = repository;
     this.azureConnection = azureConnection;
@@ -391,7 +391,7 @@ public class PictureServiceAzureImpl implements PictureService {
    * Creates a random name.
    * @return a random generated string.
    */
-  public String generateString() {
+  private String generateString() {
     return UUID.randomUUID().toString().replace("-", "");
   }
 
@@ -400,7 +400,7 @@ public class PictureServiceAzureImpl implements PictureService {
    * @param name as the file name
    * @return the extension of the file.
    */
-  public String getFileExtension(String name) {
+  private String getFileExtension(String name) {
 
     String extension;
     try {
