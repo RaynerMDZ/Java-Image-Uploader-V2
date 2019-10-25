@@ -4,6 +4,7 @@ import com.multipartfile.enums.UploadMethods;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Project Lombok added to reduce verbosity.
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "picture", indexes = @Index(name = "id", columnList = "id"))
-public class Picture {
+public class Picture implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +32,9 @@ public class Picture {
   @Lob
   @Column(name = "blob")
   private byte[] blob;
+
+  @Column(name = "uri")
+  private String uri;
 
   @Lob
   @Column(name = "picture_string")

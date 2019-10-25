@@ -24,6 +24,7 @@
                     <div class="card border-0">
                         <div class="card-body text-center">
                             <h5 class="card-title" th:text="${picture.getName()}">Card title</h5>
+                            <a href="" th:href="@{${picture.getUri()}}"><h3 class="card-text" th:text="${picture.getUri()}">heyyyyyyyyy</h3></a>
                             <a href="" th:href="@{'/picture/' + ${picture.getId()} + '/delete-picture'}"><p>Delete</p></a>
                         </div>
                         <!--Server Uploaded-->
